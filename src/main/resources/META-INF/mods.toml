@@ -1,0 +1,23 @@
+modLoader="javafml" #mandatory
+loaderVersion="[31,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+
+[[mods]] #mandatory
+modId="entitywhitelist" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Entity Whitelist Mod" #mandatory
+credits="Pomfresh to bring me this idea around a beer." #optional
+authors="ZeAmateis, Pomfresh" #optional
+description='''White-list entities you want in your world !'''
+
+[[dependencies.examplemod]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[31,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="NONE"
+    side="BOTH"
