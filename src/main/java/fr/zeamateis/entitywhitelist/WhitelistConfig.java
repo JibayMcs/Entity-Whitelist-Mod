@@ -1,6 +1,6 @@
 package fr.zeamateis.entitywhitelist;
 
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -20,22 +20,41 @@ public class WhitelistConfig {
         public static Map<ResourceLocation, ForgeConfigSpec.BooleanValue> ENTITIES_WHITELIST = new HashMap<>();
 
         Common(final ForgeConfigSpec.Builder builder) {
-            builder.comment("Common config settings")
-                    .push("common");
-            ForgeConfigSpec.BooleanValue spawningEntity;
-            ForgeRegistries.ENTITIES.getEntries().forEach(entity -> {
-                if (
-                        !entity.getValue().equals(EntityType.ITEM) &&
-                                !entity.getValue().equals(EntityType.ITEM_FRAME) &&
-                                !entity.getValue().equals(EntityType.PAINTING) &&
-                                !entity.getValue().equals(EntityType.PLAYER) &&
-                                !entity.getValue().equals(EntityType.FISHING_BOBBER)
-                )
-                    ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
-            });
-
+            builder.comment("All monsters entities").push("monsters");
+            ForgeRegistries.ENTITIES.getEntries().stream()
+                    .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.MONSTER))
+                    .forEach(entity -> {
+                        ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
+                    });
             builder.pop();
-
+            builder.comment("All creatures entities").push("creatures");
+            ForgeRegistries.ENTITIES.getEntries().stream()
+                    .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.CREATURE))
+                    .forEach(entity -> {
+                        ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
+                    });
+            builder.pop();
+            builder.comment("All ambients entities").push("ambients");
+            ForgeRegistries.ENTITIES.getEntries().stream()
+                    .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.AMBIENT))
+                    .forEach(entity -> {
+                        ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
+                    });
+            builder.pop();
+            builder.comment("All monsters aquatics").push("aquatics");
+            ForgeRegistries.ENTITIES.getEntries().stream()
+                    .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.WATER_CREATURE))
+                    .forEach(entity -> {
+                        ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
+                    });
+            builder.pop();
+            builder.comment("All monsters miscellaneous", "Generally dont touch this!").push("miscellaneous");
+            ForgeRegistries.ENTITIES.getEntries().stream()
+                    .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.MISC))
+                    .forEach(entity -> {
+                        ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
+                    });
+            builder.pop();
         }
     }
 
