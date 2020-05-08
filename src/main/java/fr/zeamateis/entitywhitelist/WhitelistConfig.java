@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class WhitelistConfig {
 
-    private static final ForgeConfigSpec commonSpec;
-    public static final Common COMMON;
+    private static final ForgeConfigSpec whitelistSpec;
+    public static final Whitelist WHITELIST;
 
-    public static class Common {
+    public static class Whitelist {
         public static Map<ResourceLocation, ForgeConfigSpec.BooleanValue> ENTITIES_WHITELIST = new HashMap<>();
 
-        Common(final ForgeConfigSpec.Builder builder) {
+        Whitelist(final ForgeConfigSpec.Builder builder) {
             builder.comment("All monsters entities").push("monsters");
             ForgeRegistries.ENTITIES.getEntries().stream()
                     .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.MONSTER))
@@ -41,14 +41,14 @@ public class WhitelistConfig {
                         ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
                     });
             builder.pop();
-            builder.comment("All monsters aquatics").push("aquatics");
+            builder.comment("All aquatics entities").push("aquatics");
             ForgeRegistries.ENTITIES.getEntries().stream()
                     .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.WATER_CREATURE))
                     .forEach(entity -> {
                         ENTITIES_WHITELIST.put(entity.getKey(), builder.define(entity.getKey().toString(), true));
                     });
             builder.pop();
-            builder.comment("All monsters miscellaneous", "Generally dont touch this!").push("miscellaneous");
+            builder.comment("All miscellaneous entities", "Generally dont touch this!").push("miscellaneous");
             ForgeRegistries.ENTITIES.getEntries().stream()
                     .filter(predicate -> predicate.getValue().getClassification().equals(EntityClassification.MISC))
                     .forEach(entity -> {
@@ -59,12 +59,12 @@ public class WhitelistConfig {
     }
 
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
-        commonSpec = specPair.getRight();
-        COMMON = specPair.getLeft();
+        final Pair<Whitelist, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Whitelist::new);
+        whitelistSpec = specPair.getRight();
+        WHITELIST = specPair.getLeft();
     }
 
     public static void register(final ModLoadingContext context) {
-        context.registerConfig(ModConfig.Type.COMMON, commonSpec);
+        context.registerConfig(ModConfig.Type.COMMON, whitelistSpec, "entity-whitelist.toml");
     }
 }
